@@ -1,0 +1,191 @@
+#include<fstream.h>
+#include<conio.h>
+#include<process.h>
+#include<stdio.h>
+
+class DOCTORS
+{int id,exp;
+char name[50],type[20];
+public:
+void getdata()
+{
+cout<<"\nEnter the id";
+cin>>id;
+cout<<"\nEnter the name of doctor ";
+gets(name);
+cout<<"\nWhich tyepe of doctor";
+gets(type);
+cout<<"\nEnter your experince";
+cin>>exp;
+cout<<endl;
+}
+void showdata()
+{cout<<"\nDoctor id"<<id<<"\nDoctor name:"<<name;
+cout<<"\n type is:"<<type;
+cout<<"\nExprience"<<exp;
+}
+
+int getid()
+{
+return id;
+}
+
+char *DNAME()
+{cout<<"\nEnter the corrected name";
+gets(name);
+return(name);
+}
+};
+//void PATIENT()
+//{
+/*cout<<"\n1.CREAT A NEW PATIENT ID"<<"\n2.DISPLAY"<<"\n3.MODIFY"<<"\n4.DELETE"<<"\n5.EXIT";
+char ch;
+switch(ch)
+{case 1:PCEATE();
+break;
+case 2:PDISPLAY();
+break;
+case 3:PMODIFY();
+break;
+case 4:PDELETE();
+break;
+case 5:exit();
+default:cout<<"INVALID KEY";
+}
+} */
+void DMODIFY()
+{cout<<"\n which info you have to mofify";
+int ch;
+cin>>ch;
+cout<<"\n1.name"<<"2.type"<<"\n3.experince";
+cout<<endl;
+fstream fin("doctor.dat",ios::binary||ios::in||ios::out);
+int ID,found=0;
+DOCTORS d5;
+cout<<"\nEnter the id you want to update";
+cin>>ID;
+while(fin.read((char*)&d5,sizeof(d5)))
+{if(d5.getid()==ID)
+{int pos=fin.tellg()-sizeof(d5);
+fin.seekp(pos,ios::beg);
+d5.DNAME();
+while(fin.write((char*)&d5,sizeof(d5)))
+found=1;
+break;
+}
+}if(found==0)
+cout<<"record is not found";
+else
+cout<<"record updateed";
+fin.close();
+}
+
+
+void DCREATE()
+{      char ch;
+DOCTORS d1;
+cout<<"welcome in create";
+ofstream f1("doctor.dat",ios::binary||ios::out);
+do{
+d1.getdata();
+
+f1.write((char*)&d1,sizeof(d1));
+cout<<"do you want to continue(y/n)";
+cin>>ch;
+}
+while(ch=='y'||ch=='Y');
+f1.close();
+}
+
+
+DOCTORS d;
+void DDISPLAY()
+{ifstream f2 ("doctor.dat",ios::binary);
+while(f2.read((char*)&d,sizeof(d)))
+{d.showdata();
+}
+f2.close();
+}
+void DDELETE()
+{ int ID;
+fstream i("doctor.dat",ios::binary||ios::in);
+ofstream o("tempt.dat",ios::binary);
+DOCTORS s;
+cout<<"enter the id which you wnt to delete";
+cin>>ID;
+ while(i.read((char*)&s,sizeof(s)))
+{
+cout<<"\nwork is going on";
+if(s.getid()!=ID)
+o.write((char*)&s,sizeof(s));
+else
+cout<<"\nsorry but id is not found";
+}
+i.close();
+o.close();
+remove("doctor.dat");
+rename("temp.dat","doctor.dat");
+}
+void DOCTOR()
+{int c;
+char ch;
+do
+
+{
+	cout<<"\nenter your choice";
+	cout<<"\n1.CREAT A NEW DOCTO0R ID"<<"\n2.DISPLAY"<<"\n3.MODIFY"<<"\n4.DELETE"<<"\n5.EXIT"<<"\n5GOTO BACK MENU";
+	cin>>c;
+
+	switch(c)
+	{
+		case 1:DCREATE();
+		break;
+
+		case 2:DDISPLAY();
+		break;
+
+		case 3:DMODIFY();
+		break;
+
+		case 4:DDELETE();
+		break;
+
+		case 5:exit(0);
+		break;
+
+		default:cout<<"INVALID KEY";
+
+	}
+		cout<<"\ndo you want to go on back menu ";
+		cin>>ch;
+   }while(ch=='y'||ch=='Y');
+
+}
+
+void MENU()
+{
+  int ch;
+  char k;
+do { cout<<"You want see about press 1 and 2";
+  cout<<"\n1. DOCTIOR"<<"\n2. PATIENT"<<endl;
+  cin>>ch;
+	switch(ch)
+
+	{
+		case 1:DOCTOR();
+		break;
+	       //	case 2:PATIENT();
+	       //	break;
+		deflault:cout<<"invalid key";
+
+
+	}
+  }while(k=='y'||k=='Y');
+}
+
+void main()
+{
+clrscr();
+MENU();
+getch();
+}
